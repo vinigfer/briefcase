@@ -154,14 +154,14 @@ See https://docs.docker.com/go/buildx/ to install the buildx plugin.
 
                     Please report this as a bug at:
 
-                    https://github.com/beeware/briefcase/issues/new
+                        https://github.com/beeware/briefcase/issues/new
 
                     In your report, please including the output from running:
 
-                    $ docker --version
+                        $ docker --version
 
                     from the command prompt.
-                """
+                """,
             )
         except subprocess.CalledProcessError:
             tools.console.warning_banner(
@@ -173,14 +173,14 @@ See https://docs.docker.com/go/buildx/ to install the buildx plugin.
 
                     Please report this as a bug at:
 
-                    https://github.com/beeware/briefcase/issues/new
+                        https://github.com/beeware/briefcase/issues/new
 
                     In your report, please including the output from running:
 
-                    $ docker --version
+                        $ docker --version
 
                     from the command prompt.
-                """
+                """,
             )
         except OSError as e:
             # Docker executable doesn't exist
@@ -457,14 +457,20 @@ Delete this file and run Briefcase again.
         if mounts:
             for source, target in mounts:
                 docker_cmdline.extend(
-                    ("--volume", f"{os.fsdecode(source)}:{os.fsdecode(target)}:z")
+                    (
+                        "--volume",
+                        f"{os.fsdecode(source)}:{os.fsdecode(target)}:z",
+                    )
                 )
 
         # Pass environment variables in as --env arguments to Docker
         if env:
             for key, value in env.items():
                 docker_cmdline.extend(
-                    ("--env", f"{key}={self.dockerize_path(value, path_map)}")
+                    (
+                        "--env",
+                        f"{key}={self.dockerize_path(value, path_map)}",
+                    )
                 )
 
         # Set a cwd as the working directory for the container
@@ -559,7 +565,10 @@ Briefcase will proceed, but if access to the display is rejected, this may be wh
             else:
                 # Add the xauth database to the container
                 subprocess_kwargs.setdefault("mounts", []).append(
-                    (xauth_file_path, docker_xauth_file_path)
+                    (
+                        xauth_file_path,
+                        docker_xauth_file_path,
+                    )
                 )
                 # Tell X clients to use the xauth database to connect to the display
                 subprocess_kwargs.setdefault("env", {}).update(
@@ -582,7 +591,10 @@ Briefcase will proceed, but if access to the display is rejected, this may be wh
             # implementation, but it will likely be either the address for `docker0` or
             # and address for the host otherwise mapped through to the container.
             subprocess_kwargs.setdefault("add_hosts", []).append(
-                ("host.docker.internal", "host-gateway")
+                (
+                    "host.docker.internal",
+                    "host-gateway",
+                )
             )
 
             # Finally, tell X clients to use the spoofed display
@@ -786,7 +798,13 @@ Briefcase will proceed, but if access to the display is rejected, this may be wh
         # Retrieve xauth list that was just written for the target display
         try:
             xauth_list = self.tools.subprocess.check_output(
-                ["xauth", "-i", "-f", xauth_file_path, "nlist"]
+                [
+                    "xauth",
+                    "-i",
+                    "-f",
+                    xauth_file_path,
+                    "nlist",
+                ]
             )
         except subprocess.CalledProcessError as e:
             raise XauthDatabaseCreationFailure("Failed to retrieve xauth list") from e
